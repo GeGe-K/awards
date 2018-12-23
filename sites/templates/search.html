@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h3 class="text-center">Found {{projects|length}} results for {{message}}</h3>
+
+    {% if projects %}
+    {% for project in projects %}
+    {{project}}
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

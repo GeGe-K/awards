@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{%load staticfiles %}
 {% block content %}
 <div class="container">
     <h3 class="text-center">{{profile.user}}</h3>
-    <img src="/{{profile.profile_pic.url}}" alt="image">
+    <img src="/staticfiles/{{profile.profile_pic.url}}" alt="image">
     <p>{{profile.bio}}</p>
     {% for project in projects %}
     {{project}}
