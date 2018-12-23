@@ -3,6 +3,8 @@ from .forms import UploadSiteForm, ReviewForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Project, Review
+from django.urls import reverse
+from django.db.models import Avg
 
 # Create your views here.
 def index(request):
@@ -16,16 +18,19 @@ def index(request):
 def project(request, id):
     project = Project.objects.get(id = id)
     reviews = Review.objects.filter(project = project)
+    design = Review.objects.all().aggregate(Avg('design'))['design__avg']
+    usability = Review.objects.all().aggregate(Avg('usability'))['usability__avg']
+    content = Review.objects.all().aggregate(Avg('content'))['content__avg']
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             review.project = project
             review.save()
-        return redirect('project')
+        return redirect(reverse('project'))
     else:
         form = ReviewForm()
-    return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form})
+    return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form, 'design': design, 'usability': usability, 'content': content})
 
 @login_required(login_url='/accounts/login/')
 def upload_site(request):

@@ -4,16 +4,21 @@
 <img class="img-fluid" src="{{project.image.url}}" alt="image">
 <p>{{project.title}}</p>
 <p>by <a href="{% url 'profile' project.user.username %}">{{project.user.username}}</a></p>
+<p>Posted on {{project.pub_date}}</p>
 <p>{{project.description}}</p>
+<p>{{design}}</p>
+<p>{{usability}}</p>
+<p>{{content}}</p>
 {% if reviews %}
 <p>{{reviews}}</p>
 {% else %}
 <p>No reviews yet</p>
+{% endif %}
+{% if user.is_authenticated and project.user != user %}
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   Vote
 </button>
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
