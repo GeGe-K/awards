@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Profile, Project, Review
 from django.urls import reverse
 from django.db.models import Avg
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializer import ProfileSerializer, ProjectSerializer
 
 # Create your views here.
 def index(request):
@@ -32,6 +35,27 @@ def project(request, id):
         form = ReviewForm()
     return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form, 'design': design, 'usability': usability, 'content': content})
 
+def search(request):
+    if 'site' in request.GET and request.GET['site']:
+        search_term = request.GET.get('site')
+        projects = Project.objects.filter(title__icontains = search_term)
+        message = f'{search_term}'
+        return render(request, 'search.html', {'projects': projects, 'message': message})
+        
+    return render(request, 'search.html')
+
+class ProfileList(APIView):
+    def get(self, request, format=None):
+        all_profiles = Profile.objects.all()
+        serializers = ProfileSerializer(all_profiles, many=True)
+        return Response(serializers.data)
+
+class ProjectList(APIView):
+    def get(self, request, format=None):
+        all_projects = Project.objects.all()
+        serializers = ProjectSerializer(all_projects, many=True)
+        return Response(serializers.data)
+
 @login_required(login_url='/accounts/login/')
 def upload_site(request):
     if request.method == 'POST':
@@ -53,14 +77,6 @@ def profile(request, username):
     projects = Project.objects.filter(user = user)
     return render(request, 'profile.html', {'profile': profile, 'projects': projects})
 
-def search(request):
-    if 'site' in request.GET and request.GET['site']:
-        search_term = request.GET.get('site')
-        projects = Project.objects.filter(title__icontains = search_term)
-        message = f'{search_term}'
-        return render(request, 'search.html', {'projects': projects, 'message': message})
-        
-    return render(request, 'search.html')
 
 @login_required(login_url='/accounts/login/')
 def new_review(request):

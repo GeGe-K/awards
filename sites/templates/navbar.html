@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
+<nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container-fluid">
         <button class="navbar-toggler" data-toggle="collapse" data-target="#menu"><span class="navbar-toggler-icon"></span></button>
         <a href="{% url 'index' %}" class="navbar-brand">awwwards.</a>
@@ -8,6 +8,12 @@
                 <input type="submit" value="Search" class="btn btn-primary my-2 my-sm-0">
             </form>
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="#navDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">APIs</a>
+                    <div class="dropdown-menu" aria-labelledby="navDropdown">
+                        <a href="/api/profiles/" class="dropdown-item">Profiles</a><a href="/api/projects/" class="dropdown-item">Projects</a>
+                    </div>
+                </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a href="/profile/{{user}}" class="nav-link">Profile</a>

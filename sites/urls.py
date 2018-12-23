@@ -9,7 +9,8 @@ urlpatterns = [
     url(r'^upload/$', views.upload_site, name='upload'),
     url(r'^profile/(?P<username>\w{0,50})/$', views.profile, name='profile'),
     url(r'^search/$', views.search, name='search_results'),
-    # url(r'^new_review/$', views.new_review, name='new_review')
+    url(r'^api/profiles/$', views.ProfileList.as_view()),
+    url(r'^api/projects/$', views.ProjectList.as_view())
 ]
 
 if settings.DEBUG:
