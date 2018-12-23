@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import UploadSiteForm
+from .forms import UploadSiteForm, ReviewForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Profile, Project
+from .models import Profile, Project, Review
 
 # Create your views here.
 def index(request):
@@ -12,6 +12,20 @@ def index(request):
             Profile.objects.create(user = user)   
     projects = Project.objects.all()
     return render(request,"index.html",{"projects":projects})
+
+def project(request, id):
+    project = Project.objects.get(id = id)
+    reviews = Review.objects.filter(project = project)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.project = project
+            review.save()
+        return redirect('project')
+    else:
+        form = ReviewForm()
+    return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form})
 
 @login_required(login_url='/accounts/login/')
 def upload_site(request):
@@ -42,5 +56,16 @@ def search(request):
         return render(request, 'search.html', {'projects': projects, 'message': message})
         
     return render(request, 'search.html')
+
+@login_required(login_url='/accounts/login/')
+def new_review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+        return redirect('index')
+    else:
+        form = ReviewForm()
+    return render(request, 'review.html', {'form': form})
 
 

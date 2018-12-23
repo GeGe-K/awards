@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{%load staticfiles %}
 {% block content %}
 <div class="container">
     <p>{{profile.bio}}</p>
@@ -8,7 +7,9 @@
         {% for project in projects %}
         <div class="col-md-4 ">
             <div class="card mb-3">
-                <img src="{{project.image.url}}" alt="image" class="card-img-top">
+                <a href="{% url 'project' project.id %}">
+                    <img src="{{project.image.url}}" alt="image" class="card-img-top">
+                </a>
                 <div class="card-body">
                     <h3 class="card-title">{{project.title}}</h3>
                     <p class="card-subtitle">{{project.description}}</p>

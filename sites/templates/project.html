@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<img class="img-fluid" src="{{project.image.url}}" alt="image">
+<p>{{project.title}}</p>
+<p>by <a href="{% url 'profile' project.user.username %}">{{project.user.username}}</a></p>
+<p>{{project.description}}</p>
+{% if reviews %}
+<p>{{reviews}}</p>
+{% else %}
+<p>No reviews yet</p>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Vote
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="Submit" class="btn btn-primary">
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -22,4 +22,9 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+
+class Review(models.Model):
+    design = models.IntegerField()
+    usability = models.IntegerField()
+    content = models.IntegerField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
