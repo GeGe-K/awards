@@ -1,6 +1,7 @@
 from django import forms
+from .models import Project
 
-class UploadSiteForm(forms.Form):
-    sitename = forms.CharField(label='Sitename', max_length=30)
-    url = forms.CharField(label='URL', max_length=30)
-    description = forms.CharField(label='Description', max_length=30)
+class UploadSiteForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        exclude = ['user','pub_date']

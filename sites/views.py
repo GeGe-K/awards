@@ -16,9 +16,12 @@ def index(request):
 @login_required(login_url='/accounts/login/')
 def upload_site(request):
     if request.method == 'POST':
-        form = UploadSiteForm(request.POST)
+        form = UploadSiteForm(request.POST, request.FILES)
         if form.is_valid():
-            print(form.cleaned_data['sitename'])
+            project = form.save(commit=False)
+            project.user = request.user
+            project.save()
+        return redirect('index')
     else:
         form = UploadSiteForm()
 
