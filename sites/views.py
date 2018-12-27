@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import UploadSiteForm, ReviewForm
+from .forms import UploadSiteForm, ReviewForm, UpdateProfile
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Project, Review
@@ -15,7 +15,7 @@ def index(request):
         user = User.objects.get(username=request.user)
         if not Profile.objects.filter(user = request.user).exists():
             Profile.objects.create(user = user)   
-    projects = Project.objects.all()
+    projects = Project.objects.order_by('-pub_date')
     return render(request,"index.html",{"projects":projects})
 
 def project(request, id):
@@ -29,6 +29,7 @@ def project(request, id):
         if form.is_valid():
             review = form.save(commit=False)
             review.project = project
+            review.user = user
             review.save()
         return redirect(reverse('project'))
     else:
@@ -70,23 +71,23 @@ def upload_site(request):
 
     return render(request, 'upload.html', {'form': form})
 
-@login_required(login_url='/accounts/login/')
 def profile(request, username):
     user = User.objects.get(username = username)
     profile = Profile.objects.get(user = user)
     projects = Project.objects.filter(user = user)
     return render(request, 'profile.html', {'profile': profile, 'projects': projects})
 
-
-@login_required(login_url='/accounts/login/')
-def new_review(request):
+@login_required(login_url = '/accounts/login/')
+def update_profile(request, id):
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        profile = Profile.objects.get(id = id)
+        form = UpdateProfile(request.POST, instance = profile)
         if form.is_valid():
-            form.save(commit=False)
-        return redirect('index')
+            form.save()
+            return redirect('index')
     else:
-        form = ReviewForm()
-    return render(request, 'review.html', {'form': form})
+        form = UpdateProfile()
+
+    return render(request, 'update_profile.html', {'form': form})
 
 

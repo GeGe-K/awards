@@ -28,3 +28,4 @@ class Review(models.Model):
     usability = models.IntegerField()
     content = models.IntegerField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
