@@ -35,7 +35,7 @@ def project(request, id):
             review.project = project
             review.user = user
             review.save()
-        return redirect('project', id = id)
+        return redirect('project', id)
     else:
         form = ReviewForm()
     return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form, 'design': design, 'usability': usability, 'content': content, 'average': average})
