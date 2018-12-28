@@ -6,9 +6,10 @@
         <img src="{{project.image.url}}" alt="" class="card-img-top">
         <div class="card-body">
             <p class="h1 card-title">{{project.title}}</p>
-            <p class="h2 card-subtitle">by <a href="{% url 'profile' project.user.username %}">{{project.user.username}}</a></p>
+            <p class="h2 card-subtitle my-2">by <a href="{% url 'profile' project.user.username %}">{{project.user.username}}</a></p>
             <p class="card-text">Posted on {{project.pub_date | date}}</p>
-            <p class="card-text">{{project.description}}</p>
+            <a href="{{project.url}}" target="_blank" class="card-link">View Site</a>
+            <p class="card-text mt-2">{{project.description}}</p>
             <p class="card-text">Design - {{design}}</p>
             <p class="card-text">Usability - {{usability}}</p>
             <p class="card-text">Content - {{content}}</p>
@@ -34,6 +35,8 @@
                     </div>
                 </div>
             </div>
+            {% elif user == project.user %}
+            <p class="h5">You can't vote on your own site!</p>
             {% else %}
             <p class="h5">Log in to vote!</p>
             {% endif %}
@@ -51,9 +54,10 @@
                 </div>
             </div>
             <div class=" w-25 d-flex justify-content-between">
-                Design<span class="h3">{{review.design}}</span>
-                Usability<span class="h3">{{review.usability}}</span>
-                Content<span class="h3">{{review.content}}</span>
+                <span class="h3">D - {{review.design}}</span>
+                <span class="h3">U - {{review.usability}}</span>
+                <span class="h3">C - {{review.content}}</span>
+                <span class="h3">A - {{review.average}}</span>
             </div>
         </li>
     {% endfor %}

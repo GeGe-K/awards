@@ -8,7 +8,7 @@ class UploadSiteForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        exclude = ['project', 'user']
+        exclude = ['average','project', 'user']
 
 class UpdateProfile(forms.ModelForm):
     class Meta:

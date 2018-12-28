@@ -27,5 +27,6 @@ class Review(models.Model):
     design = models.IntegerField()
     usability = models.IntegerField()
     content = models.IntegerField()
+    average = models.IntegerField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
