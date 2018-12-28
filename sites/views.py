@@ -19,11 +19,13 @@ def index(request):
     return render(request,"index.html",{"projects":projects})
 
 def project(request, id):
+    user = User.objects.get(username = request.user)
     project = Project.objects.get(id = id)
     reviews = Review.objects.filter(project = project)
-    design = Review.objects.all().aggregate(Avg('design'))['design__avg']
-    usability = Review.objects.all().aggregate(Avg('usability'))['usability__avg']
-    content = Review.objects.all().aggregate(Avg('content'))['content__avg']
+    design = reviews.aggregate(Avg('design'))['design__avg']
+    usability = reviews.aggregate(Avg('usability'))['usability__avg']
+    content = reviews.aggregate(Avg('content'))['content__avg']
+    average = (design + usability + content) / 3
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -31,10 +33,10 @@ def project(request, id):
             review.project = project
             review.user = user
             review.save()
-        return redirect(reverse('project'))
+        return redirect('project', id = id)
     else:
         form = ReviewForm()
-    return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form, 'design': design, 'usability': usability, 'content': content})
+    return render(request, 'project.html', {'project': project, 'reviews': reviews, 'form': form, 'design': design, 'usability': usability, 'content': content, 'average': average})
 
 def search(request):
     if 'site' in request.GET and request.GET['site']:
@@ -81,10 +83,11 @@ def profile(request, username):
 def update_profile(request, id):
     if request.method == 'POST':
         profile = Profile.objects.get(id = id)
-        form = UpdateProfile(request.POST, instance = profile)
+        form = UpdateProfile(request.POST or None, request.FILES or None, instance = profile)
         if form.is_valid():
-            form.save()
-            return redirect('index')
+            edit = form.save(commit=False)
+            edit.save()
+            return redirect('profile', username = request.user)
     else:
         form = UpdateProfile()
 
