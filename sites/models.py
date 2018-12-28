@@ -24,9 +24,12 @@ class Profile(models.Model):
         return self.user.username
 
 class Review(models.Model):
-    design = models.IntegerField()
-    usability = models.IntegerField()
-    content = models.IntegerField()
-    average = models.IntegerField()
+    design = models.IntegerField(default=0)
+    usability = models.IntegerField(default=0)
+    content = models.IntegerField(default=0)
+    average = models.IntegerField(default=0)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.project.title
